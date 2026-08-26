@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12161B">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Treino">
+<meta name="format-detection" content="telephone=no">
+<title>Treino · Corpo inteiro 2×</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --tinta:#12161B;
+  --aco:#1C242D;
+  --aco-claro:#28323D;
+  --linha:#36424F;
+  --osso:#F3F0EA;
+  --osso-fraco:#9AA6B4;
+  --verde:#2E9BFF;
+  --amarelo:#E8B62C;
+  --azul:#3B7DC4;
+  --lilas:#8A6FC4;
+  --display:'Bricolage Grotesque', Georgia, serif;
+  --corpo:'Instrument Sans', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+
+*{box-sizing:border-box;}
+
+html{
+  -webkit-text-size-adjust:100%;
+  background:var(--tinta);
+}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--tinta);
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:none;
+}
+/* toques sem atraso de 300 ms e sem zoom por duplo-toque em controles */
+button,input,a{touch-action:manipulation;}
+
+#app{
+  font-family:var(--corpo);
+  background:var(--tinta);
+  color:var(--osso);
+  padding:calc(env(safe-area-inset-top, 0px) + 18px)
+          calc(env(safe-area-inset-right, 0px) + 16px)
+          calc(env(safe-area-inset-bottom, 0px) + 40px)
+          calc(env(safe-area-inset-left, 0px) + 16px);
+  max-width:640px;
+  margin:0 auto;
+  min-height:100vh;
+  min-height:100dvh;
+  font-size:18px;
+  line-height:1.5;
+}
+
+#app h1,#app h2,#app h3{font-family:var(--display);margin:0;letter-spacing:-0.02em;}
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--osso-fraco);
+}
+
+/* ---------- cabeçalho / pilha de anilhas ---------- */
+.topo{margin-bottom:8px;display:flex;align-items:center;gap:14px;}
+.topo .txt{flex:1;}
+.topo h1{font-size:30px;font-weight:800;line-height:1.05;margin-top:6px;}
+.topo .mascote{
+  width:66px;height:66px;flex-shrink:0;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.4));
+}
+
+.pilha{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  height:104px;
+  margin:22px 0 10px;
+  border-bottom:2px solid var(--linha);
+  padding-bottom:0;
+}
+.anilha{
+  flex:1;
+  border-radius:8px 8px 0 0;
+  background:var(--aco);
+  border:2px solid var(--linha);
+  border-bottom:none;
+  color:var(--osso-fraco);
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:8px;
+  cursor:pointer;
+  transition:height .25s ease, background .2s ease, color .2s ease;
+  height:34px;
+  appearance:none;
+}
+.anilha:nth-child(1){height:44px;}
+.anilha:nth-child(2){height:58px;}
+.anilha:nth-child(3){height:74px;}
+.anilha:nth-child(4){height:92px;}
+.anilha.ativa{
+  background:var(--c);
+  border-color:var(--c);
+  color:#0F1317;
+  font-weight:700;
+}
+.anilha:focus-visible{outline:3px solid var(--osso);outline-offset:2px;}
+
+.faixa-ciclo{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.faixa-ciclo h2{font-size:24px;font-weight:700;}
+.faixa-ciclo h2 span{color:var(--c);}
+
+.foco{
+  background:var(--aco);
+  border-left:5px solid var(--c);
+  padding:14px 16px;
+  border-radius:0 10px 10px 0;
+  margin-bottom:14px;
+  font-size:17px;
+}
+.foco .eyebrow{display:block;margin-bottom:4px;}
+
+.metricas{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:14px;
+}
+.metrica{
+  background:var(--aco);
+  border-radius:10px;
+  padding:12px 10px;
+  text-align:center;
+}
+.metrica b{
+  display:block;
+  font-family:var(--mono);
+  font-size:19px;
+  font-weight:700;
+  color:var(--osso);
+  margin-top:3px;
+}
+
+.dica-carga{
+  background:rgba(232,182,44,.08);
+  border:1px solid rgba(232,182,44,.28);
+  border-radius:10px;
+  padding:11px 14px;
+  margin-bottom:26px;
+  font-size:14.5px;
+  color:var(--osso);
+  line-height:1.5;
+}
+.dica-carga b{color:var(--amarelo);font-weight:600;}
+
+/* ---------- abas dos dias ---------- */
+.dias{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:22px;}
+.dia-btn{
+  appearance:none;
+  background:var(--aco);
+  border:2px solid var(--linha);
+  color:var(--osso-fraco);
+  border-radius:10px;
+  padding:14px 8px 12px;
+  min-height:64px;
+  cursor:pointer;
+  font-family:var(--corpo);
+  line-height:1.15;
+  transition:.2s;
+}
+.dia-btn b{display:block;font-family:var(--display);font-size:22px;font-weight:800;color:var(--osso);}
+.dia-btn small{font-size:12px;letter-spacing:.02em;}
+.dia-btn.ativa{background:var(--osso);border-color:var(--osso);color:#3B4552;}
+.dia-btn.ativa b{color:#12161B;}
+.dia-btn:focus-visible{outline:3px solid var(--c);outline-offset:2px;}
+
+/* ---------- exercícios ---------- */
+.exercicio{
+  border-top:1px solid var(--linha);
+  padding:18px 0 16px;
+}
+.exercicio:last-of-type{border-bottom:1px solid var(--linha);}
+.slot{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:6px;
+}
+.slot .prescricao{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:16px;
+  color:var(--c);
+  white-space:nowrap;
+}
+.exercicio h3{font-size:21px;font-weight:700;line-height:1.2;margin-bottom:12px;}
+
+.linha-carga{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.linha-carga label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--osso-fraco);}
+.linha-carga input{
+  font-family:var(--mono);
+  font-size:17px;
+  background:var(--aco);
+  border:2px solid var(--linha);
+  color:var(--osso);
+  border-radius:10px;
+  padding:12px 14px;
+  width:132px;
+  min-height:50px;
+}
+.linha-carga input::placeholder{color:var(--osso-fraco);opacity:.7;}
+.linha-carga input:focus{outline:none;border-color:var(--c);}
+.demo{
+  margin-left:auto;
+  font-size:15px;
+  color:var(--osso);
+  text-decoration:none;
+  border-bottom:2px solid var(--c);
+  padding-bottom:1px;
+  white-space:nowrap;
+}
+.sugestao{
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--amarelo);
+  flex-basis:100%;
+  margin-top:4px;
+}
+.sugestao b{color:var(--osso);font-weight:600;}
+.anterior{
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--osso-fraco);
+  flex-basis:100%;
+  margin-top:2px;
+}
+
+/* ---------- rodapé ---------- */
+.concluir{
+  appearance:none;
+  width:100%;
+  margin-top:22px;
+  padding:18px;
+  min-height:60px;
+  border-radius:14px;
+  border:2px solid var(--c);
+  background:var(--c);
+  color:#0F1317;
+  font-family:var(--display);
+  font-size:19px;
+  font-weight:700;
+  cursor:pointer;
+}
+.concluir.feito{background:transparent;color:var(--c);}
+.concluir:focus-visible{outline:3px solid var(--osso);outline-offset:2px;}
+
+.rodape{
+  margin-top:30px;
+  padding-top:18px;
+  border-top:1px solid var(--linha);
+  font-size:14px;
+  color:var(--osso-fraco);
+  line-height:1.6;
+}
+.rodape button{
+  appearance:none;background:none;border:none;padding:0;
+  color:var(--osso-fraco);text-decoration:underline;cursor:pointer;
+  font-family:var(--corpo);font-size:14px;
+}
+.aviso{margin-top:10px;}
+
+/* ---------- miniatura de vídeo por exercício ---------- */
+.thumb{
+  margin-left:auto;
+  position:relative;
+  display:block;
+  width:92px;
+  height:56px;
+  border-radius:9px;
+  overflow:hidden;
+  border:2px solid var(--linha);
+  background:var(--aco-claro);
+  cursor:pointer;
+  flex-shrink:0;
+  padding:0;
+  appearance:none;
+}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.thumb .play{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:13px;
+  background:linear-gradient(transparent 30%,rgba(0,0,0,.35));
+}
+.thumb .play span{
+  display:flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(15,19,23,.72);
+  padding-left:2px;
+}
+.thumb:hover{border-color:var(--c);}
+.thumb:focus-visible{outline:3px solid var(--c);outline-offset:2px;}
+
+/* ---------- modal do vídeo ---------- */
+.modal-bg{
+  position:fixed;inset:0;
+  background:rgba(6,9,12,.9);
+  display:flex;align-items:center;justify-content:center;
+  padding:calc(env(safe-area-inset-top, 0px) + 16px)
+          calc(env(safe-area-inset-right, 0px) + 16px)
+          calc(env(safe-area-inset-bottom, 0px) + 16px)
+          calc(env(safe-area-inset-left, 0px) + 16px);
+  z-index:50;
+}
+.modal-bg[hidden]{display:none;}
+.modal{
+  width:100%;max-width:560px;
+  background:var(--aco);
+  border:2px solid var(--linha);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.modal-topo{display:flex;align-items:center;gap:10px;padding:13px 14px;}
+.modal-topo h3{font-size:17px;font-weight:700;line-height:1.2;flex:1;}
+.modal-topo .eyebrow{display:block;margin-bottom:2px;}
+.modal-fechar{
+  appearance:none;background:var(--aco-claro);border:none;
+  color:var(--osso);width:42px;height:42px;border-radius:11px;
+  font-size:22px;line-height:1;cursor:pointer;flex-shrink:0;
+}
+.modal-video{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.modal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.modal-rodape{padding:11px 14px 14px;font-size:14px;color:var(--osso-fraco);}
+.modal-rodape a{
+  color:var(--osso);text-decoration:none;
+  border-bottom:2px solid var(--c);padding-bottom:1px;
+}
+.modal-fechar:focus-visible,.modal-rodape a:focus-visible{outline:3px solid var(--c);outline-offset:2px;}
+
+@media (max-width:420px){
+  #app{
+    font-size:17px;
+    padding:calc(env(safe-area-inset-top, 0px) + 14px)
+            calc(env(safe-area-inset-right, 0px) + 14px)
+            calc(env(safe-area-inset-bottom, 0px) + 34px)
+            calc(env(safe-area-inset-left, 0px) + 14px);
+  }
+  .topo h1{font-size:26px;}
+  .topo .mascote{width:56px;height:56px;}
+  .demo{margin-left:0;flex-basis:100%;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="topo">
+    <img class="mascote" src="Snoopy_amarelo.png" alt="" onerror="this.style.display='none'">
+    <div class="txt">
+      <span class="eyebrow">Handball · força e prevenção · 2×/sem</span>
+      <h1>Base atlética</h1>
+    </div>
+  </div>
+
+  <div class="pilha" id="pilha"></div>
+  <div class="faixa-ciclo">
+    <h2 id="titulo-mes"></h2>
+    <span class="eyebrow" id="renovacao"></span>
+  </div>
+
+  <div class="foco"><span class="eyebrow">Foco do mês</span><span id="foco-texto"></span></div>
+
+  <div class="metricas">
+    <div class="metrica"><span class="eyebrow">Principais</span><b id="m-principal"></b></div>
+    <div class="metrica"><span class="eyebrow">Acessórios</span><b id="m-acessorio"></b></div>
+    <div class="metrica"><span class="eyebrow">Descanso</span><b id="m-descanso"></b></div>
+  </div>
+
+  <div class="dica-carga" id="dica-carga"></div>
+
+  <div class="dias" id="dias"></div>
+  <div id="lista"></div>
+  <button class="concluir" id="concluir"></button>
+
+  <div class="rodape">
+    <span id="info-inicio"></span><br>
+    <button id="reiniciar">Recomeçar o ciclo a partir de hoje</button>
+    <div class="aviso">Treino de corpo inteiro voltado para quem joga handball: prioriza estabilidade de quadril e joelho (prevenção de lesão de joelho/LCA), saúde do ombro do arremesso e força de tronco para o arremesso e o contato — sempre respeitando o cuidado com joelho e lombar (sem agachamento profundo, afundo, stiff ou levantamento terra). Aqueça 5 min de bike/esteira e solte bem os ombros antes de começar. Os pesos sugeridos são um ponto de partida leve — o certo é aquele em que dá pra fazer todas as repetições e ainda sobrar 2 ou 3, e as cargas ficam salvas por exercício. Quando os movimentos estiverem firmes e sem dor, vale acrescentar saltos e aterrissagens leves com acompanhamento. Se algum movimento doer (diferente de cansar), pare e troque.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const CHAVE = 'treino2x:estado';
+  let estado = { inicio: null, cargas: {}, feitos: {} };
+  let bloco = 0, blocoReal = 0, dia = 0;
+
+  const BLOCOS = [
+    { nome:'Base',          cor:'var(--verde)',  principal:'2 × 12', acessorio:'2 × 12', core:'2 × 30 s', descanso:'60 s',
+      foco:'Handball exige salto, corrida, freada e arremesso — mas o primeiro mês é para o corpo aprender os movimentos com segurança. Assista ao vídeo antes de cada exercício e faça devagar, sentindo o músculo trabalhar.',
+      dica:'Use um peso <b>bem leve</b>. Se as 12 repetições saírem fáceis demais, tudo bem — no começo a técnica vale mais que o peso.' },
+    { nome:'Firmeza',       cor:'var(--amarelo)', principal:'3 × 12', acessorio:'3 × 12', core:'3 × 30 s', descanso:'60 s',
+      foco:'Agora com 3 séries. É aqui que a estabilidade de quadril e de ombro vira base para saltar, mudar de direção e arremessar sem se machucar.',
+      dica:'Suba o peso só onde as 12 repetições ficaram <b>fáceis</b>. A última repetição deve exigir esforço, mas sem perder a forma.' },
+    { nome:'Força leve',    cor:'var(--azul)',   principal:'3 × 10', acessorio:'3 × 12', core:'3 × 40 s', descanso:'75 s',
+      foco:'Um pouco mais de carga nos principais para ganhar força de verdade — a força que protege o joelho na mudança de direção e dá potência no arremesso.',
+      dica:'Aumente o peso <b>aos poucos</b> (o menor incremento possível). Se a técnica piorar, volte ao peso anterior sem culpa.' },
+    { nome:'Consolidação',  cor:'var(--lilas)',  principal:'3 × 10', acessorio:'3 × 10', core:'3 × 45 s', descanso:'75 s',
+      foco:'Mês de consolidar. Quando estes movimentos estiverem firmes e sem dor, dá para começar a incluir saltos e aterrissagens leves fora da musculação — a base para a quadra já vai estar pronta.',
+      dica:'Este é o fechamento do ciclo. Priorize <b>constância</b>: fazer os 2 treinos na semana vale mais do que subir muito o peso.' }
+  ];
+
+  const DIAS = [
+    { letra:'A', nome:'Salto · arremesso · core' },
+    { letra:'B', nome:'Estabilidade · costas · ombro' }
+  ];
+
+  // [ slot, tipo, nome, sugestão de carga inicial ]
+  // O rótulo do slot mostra PARA QUE serve no handball.
+  // tipo: 'principal' | 'acessorio' | 'core'
+  const PROGRAMA = [
+    [ // DIA A — potência de quadril, empurrar do arremesso e core rotacional
+      ['Quadril · salto','principal','Ponte de glúteo no chão','só o peso do corpo (depois 4 a 6 kg no quadril)'],
+      ['Força de perna','principal','Agachamento goblet até o banco','3 a 5 kg (só desça até tocar o banco)'],
+      ['Joelho · prevenção','acessorio','Curl de perna na bola suíça','só o peso do corpo'],
+      ['Empurrar · arremesso','acessorio','Chest press na estação','placa mais leve (~5 a 10 kg)'],
+      ['Ombro do arremesso','acessorio','Desenvolvimento sentada com halteres','2 a 3 kg cada mão'],
+      ['Core do arremesso','acessorio','Pallof press no cross-over','placa bem leve (~2,5 a 5 kg)'],
+      ['Impulsão do salto','acessorio','Panturrilha em pé no Smith','só o peso do corpo (depois 5 a 10 kg)']
+    ],
+    [ // DIA B — estabilidade de uma perna, costas e saúde do ombro
+      ['Salto (1 perna)','principal','Ponte de glúteo no chão com uma perna','só o peso do corpo'],
+      ['Joelho · direção','principal','Abdução em pé no cross-over','0,5 a 1 kg / placa mais leve'],
+      ['Costas · postura','acessorio','Remada baixa no cross-over','placa leve (~10 kg)'],
+      ['Costas (com apoio)','acessorio','Remada unilateral com halter no banco','2 a 4 kg'],
+      ['Ombro do arremesso','acessorio','Elevação lateral com halteres','1 a 2 kg cada mão'],
+      ['Equilíbrio do ombro','acessorio','Crucifixo inverso com halteres','1 a 2 kg cada mão'],
+      ['Core · protege a lombar','core','Dead bug','sem carga']
+    ]
+  ];
+
+  // Vídeos de demonstração verificados no YouTube (id do vídeo por movimento).
+  const VIDEOS = {
+    ponte:'le8ZN02BQCE', ponteUni:'2qBIZo4ngpA', goblet:'ge1vdJRP0UA',
+    legcurl:'F8l93Dq7iF8', abducaoPe:'6F_LLR4w8hQ', panturrilha:'cklp_Xh5V8M',
+    remadaBaixa:'f8AVh4VBbos', remadaUni:'m4h4jT9patY',
+    crucifixoInv:'zaWY4BdLYnI', elevLateral:'qDAoUOmdbi4',
+    chestPress:'z60iX0eYJG4', desenvolvimento:'eufDL9MmF8A',
+    pallof:'Wez6pSiwfJg', deadBug:'4XLEnwUr1d8', birdDog:'QABW99qPiNM'
+  };
+
+  // Casa o nome do exercício (sem acento/minúsculo) com um vídeo. Ordem importa: do específico ao genérico.
+  const REGRAS = [
+    [/ponte.*(uma perna|unilateral|1 perna)|(uma perna|unilateral).*ponte/, 'ponteUni'],
+    [/ponte de gluteo|ponte no chao|elevacao de quadril|pelvica|hip ?thrust/, 'ponte'],
+    [/goblet|agachamento/, 'goblet'],
+    [/curl de perna|leg curl/, 'legcurl'],
+    [/abducao/, 'abducaoPe'],
+    [/panturrilha|calf/, 'panturrilha'],
+    [/pallof/, 'pallof'],
+    [/crucifixo invers|crucifixo invert|reverse fly/, 'crucifixoInv'],
+    [/elevacao lateral/, 'elevLateral'],
+    [/desenvolvimento/, 'desenvolvimento'],
+    [/remada unilateral|remada.*halter|serrote|remada.*banco/, 'remadaUni'],
+    [/remada/, 'remadaBaixa'],
+    [/chest ?press/, 'chestPress'],
+    [/dead ?bug/, 'deadBug'],
+    [/bird ?dog/, 'birdDog']
+  ];
+
+  function semAcento(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
+
+  function videoDe(nome){
+    const n = semAcento(nome);
+    for(const [re, chave] of REGRAS){ if(re.test(n)) return VIDEOS[chave]; }
+    return null;
+  }
+
+  const $ = id => document.getElementById(id);
+
+  // ---------- modal de vídeo (criado uma vez) ----------
+  let modalRefs = null;
+  function criarModal(){
+    const bg = document.createElement('div');
+    bg.className = 'modal-bg';
+    bg.hidden = true;
+    bg.innerHTML =
+      '<div class="modal" role="dialog" aria-modal="true" aria-label="Vídeo do exercício">' +
+        '<div class="modal-topo">' +
+          '<div style="flex:1"><span class="eyebrow">Como executar</span><h3 id="mv-titulo"></h3></div>' +
+          '<button class="modal-fechar" id="mv-fechar" aria-label="Fechar vídeo">×</button>' +
+        '</div>' +
+        '<div class="modal-video"><iframe id="mv-frame" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Demonstração do exercício"></iframe></div>' +
+        '<div class="modal-rodape"><a id="mv-link" target="_blank" rel="noopener">▶ Abrir no YouTube</a></div>' +
+      '</div>';
+    document.body.appendChild(bg);
+    const fechar = ()=>fecharVideo();
+    bg.addEventListener('click', e=>{ if(e.target===bg) fechar(); });
+    bg.querySelector('#mv-fechar').onclick = fechar;
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !bg.hidden) fechar(); });
+    modalRefs = {
+      bg, frame: bg.querySelector('#mv-frame'),
+      titulo: bg.querySelector('#mv-titulo'), link: bg.querySelector('#mv-link')
+    };
+  }
+
+  function abrirVideo(nome){
+    const id = videoDe(nome);
+    if(!id){ window.open(linkDemo(nome), '_blank', 'noopener'); return; }
+    if(!modalRefs) criarModal();
+    modalRefs.titulo.textContent = nome;
+    modalRefs.frame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1';
+    modalRefs.link.href = 'https://www.youtube.com/watch?v=' + id;
+    modalRefs.bg.hidden = false;
+    document.body.style.overflow = 'hidden';   // trava o fundo enquanto o vídeo abre
+  }
+
+  function fecharVideo(){
+    if(!modalRefs) return;
+    modalRefs.frame.src = 'about:blank';   // interrompe a reprodução
+    modalRefs.bg.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  // Armazenamento resiliente: usa o storage do app (host) quando existe
+  // e SEMPRE também o localStorage do navegador, para as cargas nunca se perderem.
+  const armazen = {
+    async get(k){
+      let valor = null;
+      if(window.storage && window.storage.get){
+        try{ const r = await window.storage.get(k); if(r && r.value) valor = r.value; }catch(e){}
+      }
+      if(valor == null){
+        try{ const v = localStorage.getItem(k); if(v != null) valor = v; }catch(e){}
+      }
+      return valor;
+    },
+    async set(k, v){
+      let ok = false;
+      try{ localStorage.setItem(k, v); ok = true; }catch(e){}
+      if(window.storage && window.storage.set){
+        try{ await window.storage.set(k, v); ok = true; }catch(e){}
+      }
+      return ok;
+    }
+  };
+
+  async function carregar(){
+    try{
+      const v = await armazen.get(CHAVE);
+      if(v) estado = JSON.parse(v);
+    }catch(e){ /* primeira abertura */ }
+    if(!estado.inicio){
+      estado.inicio = new Date().toISOString();
+      salvar();
+    }
+    if(!estado.cargas) estado.cargas = {};
+    if(!estado.feitos) estado.feitos = {};
+  }
+
+  let pendente = null;
+  function salvar(){
+    clearTimeout(pendente);
+    pendente = setTimeout(()=>{
+      armazen.set(CHAVE, JSON.stringify(estado))
+        .catch(e=>console.error('Não deu para salvar:', e));
+    }, 400);
+  }
+
+  // Grava imediatamente ao sair/minimizar, sem esperar o timer (essencial no celular).
+  function gravarAgora(){
+    clearTimeout(pendente);
+    const dados = JSON.stringify(estado);
+    try{ localStorage.setItem(CHAVE, dados); }catch(e){}
+    if(window.storage && window.storage.set){ try{ window.storage.set(CHAVE, dados); }catch(e){} }
+  }
+  window.addEventListener('pagehide', gravarAgora);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'hidden') gravarAgora(); });
+
+  function mesesDecorridos(){
+    const i = new Date(estado.inicio), h = new Date();
+    let m = (h.getFullYear()-i.getFullYear())*12 + (h.getMonth()-i.getMonth());
+    if(h.getDate() < i.getDate()) m--;
+    return Math.max(0, m);
+  }
+
+  function proximaRenovacao(){
+    const i = new Date(estado.inicio);
+    const d = new Date(i);
+    d.setMonth(i.getMonth() + mesesDecorridos() + 1);
+    return d.toLocaleDateString('pt-BR', {day:'2-digit', month:'long'});
+  }
+
+  function linkDemo(nome){
+    return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(nome + ' execução academia');
+  }
+
+  function prescricao(b, tipo){
+    return BLOCOS[b][tipo];
+  }
+
+  function renderPilha(){
+    const p = $('pilha');
+    p.innerHTML = '';
+    BLOCOS.forEach((b,i)=>{
+      const el = document.createElement('button');
+      el.className = 'anilha' + (i===bloco ? ' ativa':'');
+      el.style.setProperty('--c', b.cor);
+      el.textContent = 'Mês ' + (i+1);
+      el.setAttribute('aria-pressed', i===bloco);
+      el.onclick = ()=>{ bloco = i; render(); };
+      p.appendChild(el);
+    });
+  }
+
+  function render(){
+    const b = BLOCOS[bloco];
+    document.getElementById('app').style.setProperty('--c', b.cor);
+
+    renderPilha();
+    const numeroCiclo = Math.floor(mesesDecorridos()/4) + 1;
+    $('titulo-mes').innerHTML = 'Mês ' + (bloco+1) + ' · <span>' + b.nome + '</span>';
+    $('renovacao').textContent = bloco === blocoReal
+      ? 'Renova em ' + proximaRenovacao()
+      : 'Prévia — mês atual é o ' + (blocoReal+1);
+    $('foco-texto').textContent = b.foco;
+    $('m-principal').textContent = b.principal;
+    $('m-acessorio').textContent = b.acessorio;
+    $('m-descanso').textContent = b.descanso;
+    $('dica-carga').innerHTML = '<b>Como saber o peso certo:</b> ' + b.dica;
+
+    const cont = $('dias');
+    cont.innerHTML = '';
+    DIAS.forEach((d,i)=>{
+      const el = document.createElement('button');
+      el.className = 'dia-btn' + (i===dia ? ' ativa':'');
+      el.innerHTML = '<b>Treino ' + d.letra + '</b><small>' + d.nome + '</small>';
+      el.onclick = ()=>{ dia = i; render(); };
+      cont.appendChild(el);
+    });
+
+    const lista = $('lista');
+    lista.innerHTML = '';
+    PROGRAMA[dia].forEach(([slot, tipo, nome, sugestao], idx)=>{
+      const chave = dia + ':' + idx + ':' + nome;
+      const cargaAtual = estado.cargas[chave] || '';
+
+      const div = document.createElement('div');
+      div.className = 'exercicio';
+
+      const topo = document.createElement('div');
+      topo.className = 'slot';
+      topo.innerHTML = '<span class="eyebrow">' + slot + '</span><span class="prescricao">' + prescricao(bloco, tipo) + '</span>';
+
+      const h = document.createElement('h3');
+      h.textContent = nome;
+
+      const linha = document.createElement('div');
+      linha.className = 'linha-carga';
+
+      const lab = document.createElement('label');
+      lab.textContent = 'Carga';
+      lab.setAttribute('for', 'c'+idx);
+
+      const inp = document.createElement('input');
+      inp.id = 'c'+idx;
+      inp.type = 'text';
+      inp.inputMode = 'decimal';
+      inp.placeholder = tipo === 'core' ? 'sem carga' : 'kg';
+      inp.value = cargaAtual;
+      inp.oninput = ()=>{ estado.cargas[chave] = inp.value; salvar(); };
+
+      const idVideo = videoDe(nome);
+      if(idVideo){
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'thumb';
+        btn.setAttribute('aria-label', 'Ver vídeo: ' + nome);
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = '';
+        img.src = 'https://i.ytimg.com/vi/' + idVideo + '/mqdefault.jpg';
+        const play = document.createElement('span');
+        play.className = 'play';
+        play.innerHTML = '<span>▶</span>';
+        btn.append(img, play);
+        btn.onclick = ()=> abrirVideo(nome);
+        linha.append(lab, inp, btn);
+      }else{
+        const a = document.createElement('a');
+        a.className = 'demo';
+        a.href = linkDemo(nome);
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = '▶ Vídeo no YouTube';
+        linha.append(lab, inp, a);
+      }
+
+      // sugestão de carga inicial (só aparece enquanto ela ainda não anotou o peso dela)
+      if(sugestao && tipo !== 'core' && !cargaAtual){
+        const s = document.createElement('span');
+        s.className = 'sugestao';
+        s.innerHTML = '▸ Sugestão para começar: <b>' + sugestao + '</b>';
+        linha.appendChild(s);
+      }
+
+      // carga registrada em ciclos/meses anteriores para este mesmo exercício
+      const anteriores = Object.keys(estado.cargas)
+        .filter(k => k !== chave && k.endsWith(':' + nome) && estado.cargas[k]);
+      if(anteriores.length){
+        const s = document.createElement('span');
+        s.className = 'anterior';
+        s.textContent = 'Da última vez: ' + estado.cargas[anteriores[0]];
+        linha.appendChild(s);
+      }
+
+      div.append(topo, h, linha);
+      lista.appendChild(div);
+    });
+
+    const chaveDia = semanaAtual() + ':' + dia;
+    const btn = $('concluir');
+    const feito = !!estado.feitos[chaveDia];
+    btn.className = 'concluir' + (feito ? ' feito':'');
+    btn.textContent = feito ? '✓ Treino ' + DIAS[dia].letra + ' concluído esta semana' : 'Marcar treino ' + DIAS[dia].letra + ' como feito';
+    btn.onclick = ()=>{
+      if(estado.feitos[chaveDia]) delete estado.feitos[chaveDia];
+      else estado.feitos[chaveDia] = true;
+      salvar(); render();
+    };
+
+    const feitosSemana = DIAS.filter((_,i)=>estado.feitos[semanaAtual()+':'+i]).length;
+    $('info-inicio').textContent =
+      'Ciclo ' + numeroCiclo + ', começado em ' + new Date(estado.inicio).toLocaleDateString('pt-BR') +
+      ' · ' + feitosSemana + ' de 2 treinos feitos nesta semana.';
+  }
+
+  function semanaAtual(){
+    const d = new Date();
+    const alvo = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    alvo.setDate(alvo.getDate() + 3 - ((alvo.getDay() + 6) % 7));
+    const inicioAno = new Date(alvo.getFullYear(), 0, 4);
+    const semana = 1 + Math.round(((alvo - inicioAno)/86400000 - 3 + ((inicioAno.getDay()+6)%7))/7);
+    return alvo.getFullYear() + 'W' + semana;
+  }
+
+  $('reiniciar').onclick = ()=>{
+    estado.inicio = new Date().toISOString();
+    estado.feitos = {};
+    blocoReal = 0; bloco = 0;
+    salvar(); render();
+  };
+
+  carregar().then(()=>{
+    blocoReal = mesesDecorridos() % 4;
+    bloco = blocoReal;
+    render();
+  });
+})();
+</script>
+</body>
+</html>
