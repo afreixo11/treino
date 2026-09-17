@@ -382,7 +382,7 @@ button,input,a{touch-action:manipulation;}
   <div class="rodape">
     <span id="info-inicio"></span><br>
     <button id="reiniciar">Recomeçar o ciclo a partir de hoje</button>
-    <div class="aviso">Montado só com o que existe na sua academia: Smith, cross-over, estação multifuncional (puxada, voador, chest press, extensora), barra, halteres, kettlebell, caneleira, mini band, bola suíça, step, banco e colchonete. As cargas ficam salvas por exercício e reaparecem quando a variação voltar. Ajuste sempre pela sensação do dia — se algum movimento doer, troque ou tire.</div>
+    <div class="aviso">Montado só com o que existe na sua academia: Smith, cross-over, estação multifuncional (puxada, voador, chest press, extensora), barra, halteres, kettlebell, caneleira, mini band, bola suíça, step, banco e colchonete. Cada treino intercala membro inferior e superior, e termina com panturrilha e core. As cargas ficam salvas por exercício e reaparecem quando a variação voltar. Ao marcar um treino como feito, na próxima vez que abrir o app ele já começa no treino seguinte. Ajuste sempre pela sensação do dia — se algum movimento doer, troque ou tire.</div>
   </div>
 </div>
 
@@ -411,40 +411,44 @@ button,input,a{touch-action:manipulation;}
   ];
 
   // tipo: 'principal' | 'acessorio' | 'core'
+  // Ordem intercalando membro inferior e superior; panturrilha em todos os dias; core no fim.
   const PROGRAMA = [
-    [ // DIA A
+    [ // DIA A — Glúteo + Costas
       ['Quadril','principal',['Elevação pélvica com kettlebell','Elevação pélvica unilateral com kettlebell','Elevação pélvica com kettlebell e pausa de 2 s','Elevação pélvica com pés no banco e kettlebell']],
+      ['Puxar','acessorio',['Remada baixa no cross-over','Remada curvada com halteres','Remada unilateral com halter no banco','Puxada supinada na estação']],
       ['Quadríceps','principal',['Agachamento goblet com kettlebell','Agachamento no Smith','Agachamento búlgaro com halteres','Agachamento sumô com halter']],
-      ['Posterior','acessorio',['Stiff com halteres','Curl de perna na bola suíça','Bom dia com barra no Smith','Levantamento terra romeno com barra']],
-      ['Puxar','acessorio',['Puxada frontal na estação','Remada baixa no cross-over','Remada curvada com halteres','Puxada supinada na estação']],
       ['Costas alta','acessorio',['Face pull no cross-over','Crucifixo inverso com halteres','Remada alta com halteres','Remada unilateral com halter no banco']],
+      ['Posterior','acessorio',['Stiff com halteres','Curl de perna na bola suíça','Bom dia com barra no Smith','Levantamento terra romeno com barra']],
+      ['Panturrilha','acessorio',['Panturrilha em pé no Smith','Panturrilha unilateral com halter','Panturrilha sentada com halter no joelho','Panturrilha no step com peso do corpo']],
       ['Estabilização','core',['Bird dog','Prancha lateral','Dead bug','Prancha com toque no ombro']],
       ['Abdômen','core',['Elevação de pernas no colchonete','Abdominal canivete','Abdominal na bola suíça','Prancha com joelho ao peito']]
     ],
-    [ // DIA B
+    [ // DIA B — Quadríceps + Peito
       ['Quadríceps','principal',['Agachamento no Smith','Agachamento frontal com halteres','Agachamento no Smith com pés à frente','Agachamento goblet com pausa']],
-      ['Glúteo','principal',['Abdução deitada com caneleira','Abdução em pé no cross-over','Abdução sentada com mini band','Coice em quatro apoios com caneleira']],
+      ['Empurrar','principal',['Supino reto com halteres','Supino inclinado com halteres','Chest press na estação','Supino reto no Smith']],
       ['Quadríceps acessório','acessorio',['Cadeira extensora na estação','Afundo no lugar com halteres','Step-up no step','Passada com halteres']],
-      ['Empurrar','acessorio',['Supino reto com halteres','Supino inclinado com halteres','Chest press na estação','Voador na estação']],
-      ['Ombro','acessorio',['Desenvolvimento com halteres','Elevação lateral com halteres','Desenvolvimento no Smith','Elevação lateral no cross-over']],
+      ['Peito','acessorio',['Voador na estação','Chest press na estação','Supino inclinado com halteres','Voador com halteres no banco']],
+      ['Panturrilha','acessorio',['Panturrilha em pé no Smith','Panturrilha unilateral com halter','Panturrilha sentada com halter no joelho','Panturrilha no step com peso do corpo']],
       ['Estabilização','core',['Dead bug com braços','Prancha frontal','Pallof press no cross-over','Prancha com elevação de perna']],
       ['Abdômen','core',['Abdominal supra no colchonete','Abdominal na polia ajoelhada','Rotação russa com anilha','Abdominal oblíquo na bola suíça']]
     ],
-    [ // DIA C
+    [ // DIA C — Posterior + Bíceps
       ['Posterior','principal',['Stiff com barra','Levantamento terra romeno com halteres','Bom dia no Smith','Stiff unilateral com halter']],
-      ['Glúteo','principal',['Elevação pélvica unilateral com kettlebell','Elevação pélvica com pés na bola suíça','Coice no cross-over','Elevação pélvica com kettlebell e mini band']],
-      ['Posterior acessório','acessorio',['Curl de perna na bola suíça','Flexão nórdica assistida no colchonete','Ponte na bola com flexão de joelhos','Levantamento terra romeno unilateral com halter']],
-      ['Puxar','acessorio',['Remada curvada com barra','Remada unilateral com halter','Puxada frontal na estação','Remada baixa no cross-over']],
+      ['Puxar','principal',['Remada curvada com barra','Remada unilateral com halter','Puxada frontal na estação','Remada baixa no cross-over']],
+      ['Glúteo','acessorio',['Elevação pélvica unilateral com kettlebell','Elevação pélvica com pés na bola suíça','Coice no cross-over','Elevação pélvica com kettlebell e mini band']],
       ['Bíceps','acessorio',['Rosca direta com barra','Rosca alternada com halteres','Rosca martelo','Rosca no cross-over']],
+      ['Posterior acessório','acessorio',['Curl de perna na bola suíça','Flexão nórdica assistida no colchonete','Ponte na bola com flexão de joelhos','Levantamento terra romeno unilateral com halter']],
+      ['Panturrilha','acessorio',['Panturrilha em pé no Smith','Panturrilha unilateral com halter','Panturrilha sentada com halter no joelho','Panturrilha no step com peso do corpo']],
       ['Estabilização','core',['Prancha lateral com rotação','Bird dog com mini band','Pallof press ajoelhado','Dead bug com halter']],
-      ['Abdômen','core',['Elevação de pernas com apoio no banco','Abdominal reto no colchonete','Abdominal bicicleta','Prancha dinâmica']]
+      ['Abdômen','core',['Elevação de pernas com apoio no banco','Abdominal reto no colchonete','Abdominal oblíquo no colchonete','Prancha dinâmica']]
     ],
-    [ // DIA D
+    [ // DIA D — Quadril + Ombro
       ['Quadril','principal',['Elevação pélvica com kettlebell pesada','Elevação pélvica com pausa longa','Elevação pélvica com pés na bola suíça','Elevação pélvica unilateral com kettlebell']],
-      ['Unilateral','principal',['Agachamento búlgaro com halteres','Afundo caminhando com halteres','Step-up alto no step','Agachamento sumô com kettlebell']],
-      ['Quadril acessório','acessorio',['Abdução em pé com caneleira','Adução deitada com caneleira','Panturrilha em pé no Smith','Coice no cross-over com tornozeleira']],
-      ['Ombro','acessorio',['Desenvolvimento no Smith','Elevação lateral no cross-over','Desenvolvimento sentada com halteres','Remada alta com halteres']],
+      ['Ombro','principal',['Desenvolvimento no Smith','Elevação lateral no cross-over','Desenvolvimento sentada com halteres','Remada alta com halteres']],
+      ['Unilateral','acessorio',['Agachamento búlgaro com halteres','Afundo caminhando com halteres','Step-up alto no step','Agachamento sumô com kettlebell']],
       ['Tríceps','acessorio',['Tríceps na corda no cross-over','Tríceps testa com halteres','Tríceps francês com halter','Mergulho no banco']],
+      ['Quadril acessório','acessorio',['Abdução em pé com caneleira','Adução deitada com caneleira','Coice no cross-over com tornozeleira','Abdução sentada com mini band']],
+      ['Panturrilha','acessorio',['Panturrilha em pé no Smith','Panturrilha unilateral com halter','Panturrilha sentada com halter no joelho','Panturrilha no step com peso do corpo']],
       ['Estabilização','core',['Prancha frontal com prolongamento','Dead bug alternado','Bird dog isométrico','Prancha lateral com abdução']],
       ['Abdômen','core',['Abdominal na polia ajoelhada','Prancha com joelho ao peito','Abdominal infra no banco','Rotação russa com anilha']]
     ]
@@ -618,6 +622,7 @@ button,input,a{touch-action:manipulation;}
     }
     if(!estado.cargas) estado.cargas = {};
     if(!estado.feitos) estado.feitos = {};
+    if(typeof estado.proximoDia !== 'number') estado.proximoDia = 0;
   }
 
   let pendente = null;
@@ -778,8 +783,13 @@ button,input,a{touch-action:manipulation;}
     btn.className = 'concluir' + (feito ? ' feito':'');
     btn.textContent = feito ? '✓ Treino ' + DIAS[dia].letra + ' concluído esta semana' : 'Marcar treino ' + DIAS[dia].letra + ' como feito';
     btn.onclick = ()=>{
-      if(estado.feitos[chaveDia]) delete estado.feitos[chaveDia];
-      else estado.feitos[chaveDia] = true;
+      if(estado.feitos[chaveDia]){
+        delete estado.feitos[chaveDia];
+        estado.proximoDia = dia;                       // desmarcou: reabre neste mesmo treino
+      }else{
+        estado.feitos[chaveDia] = true;
+        estado.proximoDia = (dia + 1) % DIAS.length;    // concluiu: reabre no próximo treino
+      }
       salvar(); render();
     };
 
@@ -801,13 +811,15 @@ button,input,a{touch-action:manipulation;}
   $('reiniciar').onclick = ()=>{
     estado.inicio = new Date().toISOString();
     estado.feitos = {};
-    blocoReal = 0; bloco = 0;
+    estado.proximoDia = 0;
+    blocoReal = 0; bloco = 0; dia = 0;
     salvar(); render();
   };
 
   carregar().then(()=>{
     blocoReal = mesesDecorridos() % 4;
     bloco = blocoReal;
+    dia = estado.proximoDia || 0;
     render();
   });
 })();
